@@ -1,6 +1,6 @@
 {
-  "name": "HHgames · 离线游戏大厅",
-  "short_name": "HHgames Offline",
+  "name": "HHgamesv2 Offline",
+  "short_name": "HHgamesv2",
   "id": "./",
   "start_url": "./",
   "scope": "./",
