@@ -1,5 +1,5 @@
-/* HHgames mini offline v1.23.3: single-page four-game app */
-const CACHE='hhgames-mini-v1.23.3';
+/* HHgames mini offline v1.23.5: single-page four-game app */
+const CACHE='hhgames-mini-v1.23.5';
 const FILES=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 const full=p=>new URL(p,self.registration.scope).href;
 self.addEventListener('install',e=>e.waitUntil((async()=>{const c=await caches.open(CACHE);for(const f of FILES){const r=await fetch(new Request(full(f),{cache:'reload'}));if(!r.ok)throw new Error('missing '+f+' '+r.status);await c.put(full(f),r.clone())}await self.skipWaiting()})()));
