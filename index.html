@@ -1625,7 +1625,7 @@ body.sudoku-active .sudoku-cell.selected{background:#76c4f4!important}
 @media(max-width:520px){#hubView #tiles.game-grid{grid-template-rows:repeat(2,96px)!important;grid-auto-rows:96px!important;row-gap:4px!important}}
 
 </style><style>
-/* HHgames v1.23.5: readability, larger symbols/ranks and single-line bidding. */
+/* HHgames v1.23.6: readability, larger symbols/ranks and single-line bidding. */
 /* Sudoku: red indicates ALL matching digits, including pencil marks. */
 body.sudoku-active .sudoku-cell.sdk-same{background:#ffc0c4!important}
 body.sudoku-active .sudoku-cell.sdk-same .main-digit{color:#ae142a!important;font-weight:900}
@@ -1754,7 +1754,7 @@ body.playing #statusBar:not(.friends-status) > .stat-dealer .bid-line{
 }
 
 </style><style id="hh-v1235-verified-layout">
-/* HHgames v1.23.5 layout correction. Baseline: v1.23.2, not the intervening experimental releases.
+/* HHgames v1.23.6 layout correction. Baseline: v1.23.2, not the intervening experimental releases.
    This block deliberately never changes desktop dimensions, positions, card widths,
    or hand zones. Played card *content* and table labels can become more legible. */
 
@@ -1897,7 +1897,7 @@ html:not(.hh-tablet) body.playing .felt .trick-faces .playing-card.mini .card-ce
       </div>
     </section>
   </main>
-  <footer class="footer"><div><span class="footer-dot"></span><span id="offlineText">可离线使用 · 本地保存</span></div><span id="versionText">HHgames v1.23.5 · 2026-11-24 (UTC+8)</span></footer>
+  <footer class="footer"><div><span class="footer-dot"></span><span id="offlineText">可离线使用 · 本地保存</span></div><span id="versionText">HHgames v1.23.6 · 2026-11-24 (UTC+8)</span></footer>
 </div>
 <div id="dialogBackdrop" class="dialog-backdrop hidden" role="presentation"><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle"><div class="dialog-header"><div><span class="eyebrow">HHgames</span><h2 id="dialogTitle">设置</h2></div><button id="closeDialogBtn" class="ui-btn icononly" aria-label="Close">×</button></div><div id="dialogBody" class="dialog-body"></div></section></div>
 <div id="toast" class="toast hidden" role="status"></div>
@@ -1905,7 +1905,7 @@ html:not(.hh-tablet) body.playing .felt .trick-faces .playing-card.mini .card-ce
 /* HHgames rules engine: zero external dependencies. JavaScript usable in browsers and Node. */
 (function(root){'use strict';
 const E={};
-E.VERSION='2026-11-24 · v1.23.5';
+E.VERSION='2026-11-24 · v1.23.6';
 E.SUITS=['S','H','D','C']; E.SYMBOL={S:'♠',H:'❤',D:'♦',C:'♣',J:'★',N:'NT'};
 E.DEFAULTS={players:4,decks:3,kitty:6, bonusOnTakeover:true, names:['Mr. Q','HH Boy','Prof. Wang','HH Girl'], difficulty:'expert', speed:'normal', language:'zh', allowThrows:true, kittyMultiplier:'classic', showHints:true, autoMrQ:false, handSort:'smart',dealSpeed:'normal',cardSize:'large',dealerMode:'teamRotation',counterbidTakesDealer:false,jMustDefend:true};
 const clone=x=>JSON.parse(JSON.stringify(x)); E.clone=clone;
@@ -4275,116 +4275,89 @@ setup();
 })();
 
 </script><script>
-/* HHgames v1.23.1 offline setup, verified against the same manifest as sw.js. */
+/* HHgames v1.23.6 GitHub Pages offline installer.
+   The five-file manifest MUST match the mini sw.js install cache, exactly. */
 (()=>{'use strict';
-const VERSION='1.23.5',CACHE_NAME='hhgames-v1.23.5-offline-20261124',FILES=["./","./index.html","./style.css","./js/engine.js","./js/bot.js","./js/friends.js","./js/app.js","./js/offline.js","./assets/hh.svg","./assets/icon-192.png","./assets/icon-512.png","./manifest.webmanifest","./hh-theme.css","./hh-tractor.css","./hh-v06.css","./hh-v07.css","./hh-v08.css","./hh-v10.css","./hh-v12.css","./hh-v13.css","./hh-v14.css","./hh-v17.css","./hh-v19.css","./hh-v112.css","./hh-v115.css","./hh-v116.css","./hh-v117.css","./hh-v118.css","./hh-v120.css","./hh-v122.css","./hh-v1231.css","./hh-v1232.css","./assets/avatars/mr-q.webp","./assets/avatars/prof-wang.webp","./assets/avatars/hh-boy.webp","./assets/avatars/hh-girl.webp","./guandan/index.html","./guandan/sw.js","./guandan/manifest.webmanifest","./guandan/icon-192.png","./guandan/icon-512.png","./guandan/apple-touch-icon.png"];
-const panel=document.getElementById('offlineInstallPanel'),button=document.getElementById('offlinePrepareBtn'),display=document.getElementById('offlineInstallStatus');
+const VERSION='1.23.6';
+const CACHE_NAME='hhgames-mini-v1.23.6';
+const FILES=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
+const panel=document.getElementById('offlineInstallPanel');
+const button=document.getElementById('offlinePrepareBtn');
+const display=document.getElementById('offlineInstallStatus');
 if(!panel||!button||!display)return;
 const zh=(navigator.language||'').toLowerCase().startsWith('zh');
 const say=(cn,en)=>zh?cn:en;
 const scopeURL=new URL('./',document.baseURI);
-let busy=false,timer=null,lastProblem='';
 const report=(state,msg)=>{panel.dataset.state=state;display.textContent=msg;};
 const workerVersion=w=>{try{return new URL(w?.scriptURL||'').searchParams.get('v')}catch(e){return null}};
-async function localStatus(){
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let busy=false;
+async function checkCache(){
   const c=await caches.open(CACHE_NAME),missing=[];
-  for(const p of FILES)if(!await c.match(new URL(p,scopeURL)))missing.push(p);
-  return {cached:FILES.length-missing.length,total:FILES.length,ready:!missing.length,missing};
+  for(const f of FILES){
+    if(!await c.match(new URL(f,scopeURL).href))missing.push(f);
+  }
+  const registration=await navigator.serviceWorker.getRegistration(scopeURL.href);
+  const active=workerVersion(registration?.active)===VERSION;
+  const controlling=workerVersion(navigator.serviceWorker.controller)===VERSION;
+  return {cached:FILES.length-missing.length,total:FILES.length,missing,active,controlling};
 }
-async function displayStatus(s){
-  if(!s)return;
-  if(s.ready){
-    const active=await navigator.serviceWorker.getRegistration(scopeURL.href);
-    const current=workerVersion(navigator.serviceWorker.controller)===VERSION && workerVersion(active?.active)===VERSION;
-    if(current){
-      report('ready',say('✓ 离线可用：'+s.cached+'/'+s.total+' 个文件已保存。关闭 Wi-Fi 后也可启动游戏。',
-        '✓ Offline ready: '+s.cached+'/'+s.total+' files saved. You can launch with Wi-Fi off.'));
+async function showStatus(){
+  const s=await checkCache();
+  if(s.cached===s.total){
+    if(s.active&&s.controlling){
+      report('ready',say(`✓ 离线可用：${s.cached}/${s.total} 个文件已保存。`,
+        `✓ Offline ready: ${s.cached}/${s.total} files saved.`));
     }else{
-      report('partial',say('所有文件已保存，但新离线程序尚未接管。请保持联网刷新网页一次。',
-        'All files cached; reload once online so the new offline controller takes over.'));
+      report('partial',say(`✓ 已保存 ${s.cached}/${s.total} 文件。保持联网刷新一次，让离线程序接管。`,
+        `✓ ${s.cached}/${s.total} files saved. Reload once while online to activate offline launch.`));
     }
-    return;
+  }else{
+    report('partial',say(`离线文件 ${s.cached}/${s.total}，请联网点击「下载离线游戏」。`,
+      `Offline files: ${s.cached}/${s.total}. Connect online and select Save Offline.`));
   }
-  const first=(s.errors?.[0]||s.missing?.[0]||'');
-  const detail=first?' · '+first:'';
-  report('partial',say('离线缓存未完成：'+s.cached+'/'+s.total+'。缺少 '+(s.total-s.cached)+' 个文件'+detail+'。保持联网点击「下载」。',
-    'Offline incomplete: '+s.cached+'/'+s.total+'; '+(s.total-s.cached)+' missing'+detail+'. Stay online and click Download.'));
+  return s;
 }
-async function unregisterLegacy(){
-  try{
-    const inner=new URL('./guandan/',scopeURL);
-    const r=await navigator.serviceWorker.getRegistration(inner.href);
-    if(r&&r.scope===inner.href)await r.unregister();
-  }catch(e){}
-}
-async function setupWorker(){
-  if(!('serviceWorker' in navigator)||!('caches' in window))throw Error('Service workers/CacheStorage unavailable');
-  if(location.protocol!=='https:'&&!['localhost','127.0.0.1'].includes(location.hostname))throw Error('Use the HTTPS website');
-  await unregisterLegacy();
+async function install(){
   const reg=await navigator.serviceWorker.register('./sw.js?v='+VERSION,{scope:'./',updateViaCache:'none'});
-  if(workerVersion(reg.active)!==VERSION){
-    await Promise.race([new Promise((resolve,reject)=>{
-       const t=setTimeout(()=>reject(Error('Offline worker update timed out')),18000);
-       const check=()=>{if(workerVersion(reg.active)===VERSION){clearTimeout(t);reg.removeEventListener('updatefound',check);resolve();}};
-       check();reg.addEventListener('updatefound',check);
-       const installing=reg.installing||reg.waiting;
-       installing?.addEventListener('statechange',check);
-       navigator.serviceWorker.addEventListener('controllerchange',check,{once:true});
-       const poll=setInterval(()=>{if(workerVersion(reg.active)===VERSION){clearInterval(poll);check();}},250);
-       setTimeout(()=>clearInterval(poll),18500);
-    }),navigator.serviceWorker.ready]);
-    if(workerVersion(reg.active)!==VERSION){
-      // navigator.serviceWorker.ready may refer to an old controller; wait for
-      // the new one rather than posting to an outdated manifest.
-      let i=0;while(i++<65&&workerVersion(reg.active)!==VERSION)await new Promise(r=>setTimeout(r,200));
-    }
+  // install() in sw.js downloads all five assets into the matching cache.
+  // Wait for both the worker and its five assets, not only navigator.serviceWorker.ready.
+  for(let i=0;i<100;i++){
+    const s=await checkCache();
+    if(s.cached===s.total&&s.active)return s;
+    if(reg.installing?.state==='redundant')throw Error('Offline worker installation failed');
+    await sleep(200);
   }
-  if(workerVersion(reg.active)!==VERSION)throw Error('New offline worker not active; refresh online');
-  return reg.active;
+  throw Error('Offline installation did not finish. Check network and retry.');
 }
-async function refresh(){try{await displayStatus(await localStatus())}catch(e){report('error',String(e))}}
-function setIdle(){busy=false;button.disabled=false;if(timer){clearTimeout(timer);timer=null}}
 async function prepare(){
- if(busy||location.protocol==='file:')return;
- busy=true;button.disabled=true;lastProblem='';
- report('loading',say('下载离线文件中…请保持联网','Downloading offline files… Keep Wi-Fi on'));
- try{
-   const sw=await setupWorker();
-   const s=await localStatus();
-   if(s.ready){setIdle();await displayStatus(s);return;}
-   sw.postMessage({type:'HH_PREPARE_OFFLINE'});
-   timer=setTimeout(async()=>{setIdle();await refresh();},60000);
- }catch(e){setIdle();lastProblem=String(e);report('error',say('离线程序安装失败：','Offline installation failed: ')+lastProblem)}
-}
-function message(ev){
- const s=ev.data;
- if(s?.type==='HH_OFFLINE_PROGRESS'&&busy){
-  report('loading',say('正在缓存游戏：'+s.done+'/'+s.totalJobs+' 文件…','Caching games: '+s.done+'/'+s.totalJobs+' files…'));
- } else if(s?.type==='HH_OFFLINE_STATUS'){
-  setIdle();displayStatus(s);
- }
+  if(busy)return;
+  busy=true;button.disabled=true;
+  report('loading',say('正在保存 5 个离线文件…','Saving 5 offline files…'));
+  try{await install();await showStatus()}
+  catch(e){report('error',say('保存离线游戏失败：','Offline saving failed: ')+String(e.message||e))}
+  finally{busy=false;button.disabled=false}
 }
 button.addEventListener('click',prepare);
-if(location.protocol==='file:'){panel.classList.add('hidden');return}
+if(location.protocol==='file:'){
+  panel.classList.add('hidden'); // A local standalone HTML is playable offline without a service worker.
+  return;
+}
 if(!('serviceWorker' in navigator)||!('caches' in window)){
- report('error',say('此浏览器无法安装离线网站','Browser cannot install this offline website'));button.disabled=true;return;
+  report('error',say('此浏览器不支持离线网站安装','Offline web app installation is unsupported here'));
+  button.disabled=true;return;
 }
-navigator.serviceWorker.addEventListener('message',message);
-navigator.serviceWorker.addEventListener('controllerchange',refresh);
-window.addEventListener('online',refresh);
-window.addEventListener('offline',refresh);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});
-async function start(){
- await refresh();
- try{
-   // Register even if the previous version was fully cached.
-   await setupWorker();
-   const s=await localStatus();
-   if(!s.ready&&navigator.onLine)await prepare();else await displayStatus(s);
- }catch(e){report('error',say('请保持联网并点击「下载离线游戏」：','Connect online then click Save Offline: ')+String(e))}
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+navigator.serviceWorker.addEventListener('controllerchange',()=>showStatus().catch(()=>{}));
+window.addEventListener('online',()=>showStatus().catch(()=>{}));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)showStatus().catch(()=>{})});
+(async()=>{
+  try{
+    let s=await showStatus();
+    // Install automatically the first time, when network access is present.
+    if(navigator.onLine&&s.cached<s.total)await prepare();
+    else if(navigator.onLine&&!s.active)await prepare();
+  }catch(e){report('error',say('离线检查失败：','Offline check failed: ')+String(e.message||e))}
 })();
-
+})();
 </script>
 </body></html>
