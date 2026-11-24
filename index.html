@@ -1625,7 +1625,7 @@ body.sudoku-active .sudoku-cell.selected{background:#76c4f4!important}
 @media(max-width:520px){#hubView #tiles.game-grid{grid-template-rows:repeat(2,96px)!important;grid-auto-rows:96px!important;row-gap:4px!important}}
 
 </style><style>
-/* HHgames v1.23.2: readability, larger symbols/ranks and single-line bidding. */
+/* HHgames v1.23.3: iPad table-space rebalance, larger played cards, shorter bottom hand. */
 /* Sudoku: red indicates ALL matching digits, including pencil marks. */
 body.sudoku-active .sudoku-cell.sdk-same{background:#ffc0c4!important}
 body.sudoku-active .sudoku-cell.sdk-same .main-digit{color:#ae142a!important;font-weight:900}
@@ -1753,7 +1753,56 @@ body.playing #statusBar:not(.friends-status) > .stat-dealer .bid-line{
  line-height:1.4!important;max-height:none!important;
 }
 
-</style></head>
+</style>
+<style>
+/* HHgames v1.23.3: iPad/tablet layout rebalance.
+   Goal: reduce wasted bottom-hand height, enlarge central table/play area,
+   and make played cards / seat info easier to see. */
+@media (min-width: 700px) and (max-width: 1400px){
+  body.playing .main-column{grid-template-rows:48px minmax(0,1fr) minmax(108px,22%) !important;gap:4px !important}
+  body.playing .felt{min-height:430px !important;grid-template-columns:132px minmax(0,1fr) 132px !important;grid-template-rows:86px minmax(0,1fr) 84px !important;padding:10px 12px !important}
+  body.playing .felt.friends-table{min-height:440px !important;grid-template-columns:19% 1fr 19% !important;grid-template-rows:18% 1fr 17% !important}
+  body.playing .table-center{overflow:visible !important}
+  body.playing .trick-area{padding:8px 12px !important;gap:12px 18px !important}
+  body.playing .trick-slot{gap:6px !important}
+  body.playing .trick-who{font-size:13px !important;line-height:1.2 !important}
+  body.playing .trick-faces{min-height:82px !important;padding:3px 12px 8px 6px !important;overflow:visible !important}
+  body.playing .trick-faces .playing-card.mini{width:56px !important;min-width:56px !important;flex-basis:56px !important;height:80px !important;margin-left:-14px !important;border-radius:5px !important}
+  body.playing .trick-faces .playing-card.mini .card-index strong{font-size:18px !important}
+  body.playing .trick-faces .playing-card.mini .card-index em{font-size:16px !important}
+  body.playing .trick-faces .playing-card.mini .card-center{font-size:22px !important}
+  body.playing #trickCenter .center-title{font-size:14px !important;padding:5px 10px !important}
+  body.playing .seat{z-index:8}
+  body.playing .seat .avatar{width:38px !important;height:38px !important;font-size:15px !important}
+  body.playing .seat-info{padding:8px 10px !important}
+  body.playing .player-name{font-size:15px !important;line-height:1.2 !important}
+  body.playing .seat-words small, body.playing .friend-revealed, body.playing .trick-order{font-size:11px !important}
+  body.playing .instruction-panel{max-width:86% !important}
+  body.playing .hand-panel{margin-top:8px !important;padding:8px 10px 9px !important;border-radius:11px !important}
+  body.playing .hand-heading{margin-bottom:4px !important}
+  body.playing .hand-heading h3{font-size:13px !important}
+  body.playing .hand-heading .muted{font-size:11px !important}
+  body.playing .hand-groups{gap:4px !important;min-height:0 !important}
+  body.playing .suit-row{min-height:54px !important;gap:5px !important}
+  body.playing .suit-name{width:30px !important;flex:0 0 30px !important;font-size:11px !important}
+  body.playing .suit-cards{min-height:62px !important;padding:3px 6px 6px 0 !important}
+  body.playing .playing-card{width:43px !important;min-width:43px !important;height:60px !important;padding:4px 4px 3px !important;margin-left:-14px !important;border-radius:5px !important}
+  body.playing .playing-card .card-index strong{font-size:18px !important}
+  body.playing .playing-card .card-index em{font-size:16px !important}
+  body.playing .playing-card .card-center{font-size:20px !important}
+  body.playing .banker-line, body.playing .bid-line{white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important}
+}
+@media (min-width: 980px) and (max-width: 1400px){
+  body.playing .main-column{grid-template-rows:50px minmax(0,1fr) minmax(112px,20%) !important}
+  body.playing .felt{min-height:465px !important}
+  body.playing .felt.friends-table{min-height:470px !important}
+  body.playing .trick-faces .playing-card.mini{width:60px !important;min-width:60px !important;flex-basis:60px !important;height:86px !important}
+  body.playing .trick-faces .playing-card.mini .card-center{font-size:24px !important}
+  body.playing .playing-card{width:45px !important;min-width:45px !important;height:63px !important}
+}
+</style>
+
+</head>
 <body><script>(function(){const ua=navigator.userAgent||'',touch=navigator.maxTouchPoints||0,ipad=/iPad/.test(ua)||(/Macintosh/.test(ua)&&touch>1),tablet=ipad||((window.matchMedia?.('(pointer:coarse)').matches||false)&&Math.min(screen.width,screen.height)>=600);if(tablet){document.documentElement.classList.add('hh-tablet');if(ipad)document.documentElement.classList.add('hh-ipad')}document.documentElement.dataset.deviceScale=tablet?'large':'standard';})();</script>
 <div id="app" class="shell">
   <header class="topbar">
@@ -1820,7 +1869,7 @@ body.playing #statusBar:not(.friends-status) > .stat-dealer .bid-line{
       </div>
     </section>
   </main>
-  <footer class="footer"><div><span class="footer-dot"></span><span id="offlineText">可离线使用 · 本地保存</span></div><span id="versionText">HHgames v1.23.2 · 2026-11-24 (UTC+8)</span></footer>
+  <footer class="footer"><div><span class="footer-dot"></span><span id="offlineText">可离线使用 · 本地保存</span></div><span id="versionText">HHgames v1.23.3 · 2026-11-24 (UTC+8)</span></footer>
 </div>
 <div id="dialogBackdrop" class="dialog-backdrop hidden" role="presentation"><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle"><div class="dialog-header"><div><span class="eyebrow">HHgames</span><h2 id="dialogTitle">设置</h2></div><button id="closeDialogBtn" class="ui-btn icononly" aria-label="Close">×</button></div><div id="dialogBody" class="dialog-body"></div></section></div>
 <div id="toast" class="toast hidden" role="status"></div>
@@ -1828,7 +1877,7 @@ body.playing #statusBar:not(.friends-status) > .stat-dealer .bid-line{
 /* HHgames rules engine: zero external dependencies. JavaScript usable in browsers and Node. */
 (function(root){'use strict';
 const E={};
-E.VERSION='2026-11-24 · v1.23.2';
+E.VERSION='2026-11-24 · v1.23.3';
 E.SUITS=['S','H','D','C']; E.SYMBOL={S:'♠',H:'❤',D:'♦',C:'♣',J:'★',N:'NT'};
 E.DEFAULTS={players:4,decks:3,kitty:6, bonusOnTakeover:true, names:['Mr. Q','HH Boy','Prof. Wang','HH Girl'], difficulty:'expert', speed:'normal', language:'zh', allowThrows:true, kittyMultiplier:'classic', showHints:true, autoMrQ:false, handSort:'smart',dealSpeed:'normal',cardSize:'large',dealerMode:'teamRotation',counterbidTakesDealer:false,jMustDefend:true};
 const clone=x=>JSON.parse(JSON.stringify(x)); E.clone=clone;
@@ -4202,10 +4251,10 @@ setup();
  const P=document.getElementById('offlineInstallPanel'),B=document.getElementById('offlinePrepareBtn'),S=document.getElementById('offlineInstallStatus');
  if(!P||!B||!S)return;
  const FILES=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
- const CACHE='hhgames-mini-v1.23.2';
+ const CACHE='hhgames-mini-v1.23.3';
  const check=async()=>{const c=await caches.open(CACHE);let n=0;for(const f of FILES)if(await c.match(new URL(f,location.href)))n++;S.textContent=`${n}/${FILES.length} ${n===FILES.length?'· Offline ready':'· Click Save Offline'}`;return n};
  const prepare=async()=>{
-  B.disabled=true;try{let r=await navigator.serviceWorker.register('./sw.js?v=1.23.2',{scope:'./',updateViaCache:'none'});await navigator.serviceWorker.ready;const c=await caches.open(CACHE);
+  B.disabled=true;try{let r=await navigator.serviceWorker.register('./sw.js?v=1.23.3',{scope:'./',updateViaCache:'none'});await navigator.serviceWorker.ready;const c=await caches.open(CACHE);
    for(const f of FILES){let u=new URL(f,r.scope);const res=await fetch(u,{cache:'reload'});if(!res.ok)throw Error('HTTP '+res.status+': '+f);await c.put(u,res.clone());}
    await check();}catch(e){S.textContent='Offline install error: '+e.message;}finally{B.disabled=false;}
  };
