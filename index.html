@@ -1625,7 +1625,7 @@ body.sudoku-active .sudoku-cell.selected{background:#76c4f4!important}
 @media(max-width:520px){#hubView #tiles.game-grid{grid-template-rows:repeat(2,96px)!important;grid-auto-rows:96px!important;row-gap:4px!important}}
 
 </style><style>
-/* HHgames v1.24.0: readability, larger symbols/ranks and single-line bidding. */
+/* HHgames v1.24.1: readability, larger symbols/ranks and single-line bidding. */
 /* Sudoku: red indicates ALL matching digits, including pencil marks. */
 body.sudoku-active .sudoku-cell.sdk-same{background:#ffc0c4!important}
 body.sudoku-active .sudoku-cell.sdk-same .main-digit{color:#ae142a!important;font-weight:900}
@@ -1754,7 +1754,7 @@ body.playing #statusBar:not(.friends-status) > .stat-dealer .bid-line{
 }
 
 </style><style id="hh-v1235-verified-layout">
-/* HHgames v1.24.0 layout correction. Baseline: v1.23.2, not the intervening experimental releases.
+/* HHgames v1.24.1 layout correction. Baseline: v1.23.2, not the intervening experimental releases.
    This block deliberately never changes desktop dimensions, positions, card widths,
    or hand zones. Played card *content* and table labels can become more legible. */
 
@@ -1830,6 +1830,36 @@ html:not(.hh-tablet) body.playing .felt .trick-faces .playing-card.mini .card-ce
  }
 }
 </style>
+<style>
+/* HHgames v1.24.1: Sudoku controls only; preserve every Tractor/Friends layout rule. */
+body.sudoku-active .sudoku-keypad.note .sdk-digit-key:not(.sdk-key-erase){
+ font-size:clamp(36px,4.5vw,56px)!important;line-height:1!important;
+}
+body.sudoku-active .sudoku-keypad.note .sdk-digit-key sup{
+ font-size:clamp(16px,1.7vw,22px)!important;top:2px!important;right:2px!important;
+ padding:1px 2px!important;z-index:2;
+}
+body.sudoku-active .sudoku-actions .ui-btn{
+ flex:1 1 0!important;min-width:0!important;padding:6px 3px!important;
+ font-size:clamp(10px,.84vw,13px)!important;white-space:nowrap!important;
+}
+body.sudoku-active .sudoku-shell.sudoku-swapped{
+ grid-template-columns:clamp(132px,18vw,240px) var(--sudoku-board-size) clamp(62px,7vw,92px)!important;
+}
+body.sudoku-active .sudoku-shell.sudoku-swapped .sudoku-left{grid-column:3;grid-row:1}
+body.sudoku-active .sudoku-shell.sudoku-swapped .sudoku-center{grid-column:2;grid-row:1}
+body.sudoku-active .sudoku-shell.sudoku-swapped .sudoku-right{grid-column:1;grid-row:1}
+.sudoku-modal-history{max-height:min(60dvh,650px);overflow-y:auto;}
+@media(max-width:900px){
+ body.sudoku-active .sudoku-shell.sudoku-swapped{grid-template-columns:150px var(--sudoku-board-size) 60px!important;}
+}
+@media(max-width:700px){
+ body.sudoku-active .sudoku-shell.sudoku-swapped{grid-template-columns:88px var(--sudoku-board-size) 39px!important;}
+ body.sudoku-active .sudoku-keypad.note .sdk-digit-key:not(.sdk-key-erase){font-size:clamp(25px,5vw,36px)!important;}
+ body.sudoku-active .sudoku-keypad.note .sdk-digit-key sup{font-size:clamp(13px,2.5vw,16px)!important;}
+ body.sudoku-active .sudoku-actions .ui-btn{font-size:9px!important;padding:5px 1px!important;}
+}
+</style>
 </head>
 <body><script>(function(){const ua=navigator.userAgent||'',touch=navigator.maxTouchPoints||0,ipad=/iPad/.test(ua)||(/Macintosh/.test(ua)&&touch>1),tablet=ipad||((window.matchMedia?.('(pointer:coarse)').matches||false)&&Math.min(screen.width,screen.height)>=600);if(tablet){document.documentElement.classList.add('hh-tablet');if(ipad)document.documentElement.classList.add('hh-ipad')}document.documentElement.dataset.deviceScale=tablet?'large':'standard';})();</script>
 <div id="app" class="shell">
@@ -1885,10 +1915,10 @@ html:not(.hh-tablet) body.playing .felt .trick-faces .playing-card.mini .card-ce
       <div id="sudokuLobby" class="sudoku-lobby"></div>
       <div id="sudokuGame" class="sudoku-game hidden">
         <div class="status-bar sudoku-stats" id="sudokuStats"></div>
-        <div class="sudoku-shell">
+        <div class="sudoku-shell" id="sudokuShell">
           <aside class="sudoku-side sudoku-left"><span class="sudoku-side-title" id="sudokuFixedLabel">确定</span><div id="sudokuFixedKeys" class="sudoku-keypad fixed"></div></aside>
           <section class="sudoku-center"><div id="sudokuBoard" class="sudoku-board" aria-label="Sudoku 9 by 9 board"></div>
-            <div class="sudoku-actions"><button id="sudokuEraseBtn" class="ui-btn small ghost">擦除</button><button id="sudokuValidateBtn" class="ui-btn small ghost">验证</button><button id="sudokuHintBtn" class="ui-btn small ghost">提示</button><button id="sudokuAnalyzeBtn" class="ui-btn small ghost">分析</button><button id="sudokuUndoBtn" class="ui-btn small ghost">撤销</button><button id="sudokuRestartBtn" class="ui-btn small ghost">重开本题</button><button id="sudokuFreshBtn" class="ui-btn small primary">同难度新题</button></div>
+            <div class="sudoku-actions"><button id="sudokuEraseBtn" class="ui-btn small ghost">擦除</button><button id="sudokuValidateBtn" class="ui-btn small ghost">验证</button><button id="sudokuHintBtn" class="ui-btn small ghost">提示</button><button id="sudokuAnalyzeBtn" class="ui-btn small ghost">分析</button><button id="sudokuUndoBtn" class="ui-btn small ghost">撤销</button><button id="sudokuRestartBtn" class="ui-btn small ghost">重开本题</button><button id="sudokuFreshBtn" class="ui-btn small primary">同难度新题</button><button id="sudokuSwapBtn" class="ui-btn small ghost" aria-pressed="false">交换</button></div>
             <p id="sudokuHintText" class="sudoku-hint">左：确定；右：待定。</p>
           </section>
           <aside class="sudoku-side sudoku-right"><span class="sudoku-side-title" id="sudokuNoteLabel">待定</span><div id="sudokuNoteKeys" class="sudoku-keypad note"></div></aside>
@@ -1897,7 +1927,7 @@ html:not(.hh-tablet) body.playing .felt .trick-faces .playing-card.mini .card-ce
       </div>
     </section>
   </main>
-  <footer class="footer"><div><span class="footer-dot"></span><span id="offlineText">可离线使用 · 本地保存</span></div><span id="versionText">HHgames v1.24.0 · 2026-11-24 (UTC+8)</span></footer>
+  <footer class="footer"><div><span class="footer-dot"></span><span id="offlineText">可离线使用 · 本地保存</span></div><span id="versionText">HHgames v1.24.1 · 2026-11-24 (UTC+8)</span></footer>
 </div>
 <div id="dialogBackdrop" class="dialog-backdrop hidden" role="presentation"><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle"><div class="dialog-header"><div><span class="eyebrow">HHgames</span><h2 id="dialogTitle">设置</h2></div><button id="closeDialogBtn" class="ui-btn icononly" aria-label="Close">×</button></div><div id="dialogBody" class="dialog-body"></div></section></div>
 <div id="toast" class="toast hidden" role="status"></div>
@@ -1905,7 +1935,7 @@ html:not(.hh-tablet) body.playing .felt .trick-faces .playing-card.mini .card-ce
 /* HHgames rules engine: zero external dependencies. JavaScript usable in browsers and Node. */
 (function(root){'use strict';
 const E={};
-E.VERSION='2026-11-24 · v1.24.0';
+E.VERSION='2026-11-24 · v1.24.1';
 E.SUITS=['S','H','D','C']; E.SYMBOL={S:'♠',H:'❤',D:'♦',C:'♣',J:'★',N:'NT'};
 E.DEFAULTS={players:4,decks:3,kitty:6, bonusOnTakeover:true, names:['Mr. Q','HH Boy','Prof. Wang','HH Girl'], difficulty:'expert', speed:'normal', language:'zh', allowThrows:true, kittyMultiplier:'classic', showHints:true, autoMrQ:false, handSort:'smart',dealSpeed:'normal',cardSize:'large',dealerMode:'teamRotation',counterbidTakesDealer:false,jMustDefend:true};
 const clone=x=>JSON.parse(JSON.stringify(x)); E.clone=clone;
@@ -1944,16 +1974,25 @@ E.throwComponents=function(cards,g){
  const units=[...E.counts(cards).values()].map(a=>({cards:[...a],rank:E.ordinal(a[0],g)}));
  const result=[];
  const add=(kind,groups,width)=>{const chosen=groups.flatMap(x=>x.cards.splice(0,width));result.push({kind,width,length:groups.length,high:Math.max(...groups.map(x=>x.rank)),cards:chosen});};
- for(const width of [4,3])for(const u of [...units].sort((a,b)=>b.rank-a.rank)){
-   while(u.cards.length>=width)add('group',[u],width);
- }
- while(true){
-   const pairs=units.filter(u=>u.cards.length>=2).sort((a,b)=>a.rank-b.rank);
-   let best=[],run=[];
-   for(const u of pairs){run=run.length&&u.rank===run.at(-1).rank+1?[...run,u]:[u];if(run.length>best.length)best=[...run];}
+ const ordered=()=>[...units].sort((a,b)=>a.rank-b.rank);
+ const consumeRun=width=>{
+  while(true){
+   let best=[],current=[];
+   for(const u of ordered()){
+    if(u.cards.length<width)continue;
+    current=current.length&&u.rank===current.at(-1).rank+1?[...current,u]:[u];
+    if(current.length>best.length)best=[...current];
+   }
    if(best.length<2)break;
-   add('run',best,2);
- }
+   add('run',best,width);
+  }
+ };
+ // Highest hierarchy first; a 连刻子 / consecutive-triple run is atomic,
+ // just as a consecutive-pair tractor is. Do not split it into singles/triples.
+ for(const u of [...units].sort((a,b)=>b.rank-a.rank))while(u.cards.length>=4)add('group',[u],4);
+ consumeRun(3);
+ for(const u of [...units].sort((a,b)=>b.rank-a.rank))while(u.cards.length>=3)add('group',[u],3);
+ consumeRun(2);
  for(const u of [...units].sort((a,b)=>b.rank-a.rank))while(u.cards.length>=2)add('group',[u],2);
  for(const u of [...units].sort((a,b)=>b.rank-a.rank))while(u.cards.length)add('single',[u],1);
  return result;
@@ -1961,12 +2000,10 @@ E.throwComponents=function(cards,g){
 // A proposed throw must be safe against each opponent's SAME STRUCTURE.
 // A higher isolated pair cannot block a run of consecutive pairs.
 E.throwOpponent=function(g,seat,other){
- if(other===seat)return false;
- if(g.mode==='friends'){
-  const known=new Set(g.allies||[]);
-  return !(known.has(seat)&&known.has(other));
- }
- return E.team(other)!==E.team(seat);
+ // A throw must survive cards held by EVERY other player, even a teammate.
+ // The previous same-team exemption let a bot throw AAQQ while the human
+ // teammate held KK. This follows the reported HHgames 甩牌 convention.
+ return other!==seat;
 };
 E.checkThrowSafe=function(cards,g,seat){
  if(!Array.isArray(cards)||!cards.length||!g.hands?.[seat])return false;
@@ -1983,10 +2020,10 @@ E.checkThrowSafe=function(cards,g,seat){
       if(length>=unit.length&&rank>unit.high)return false;
       prev=rank;
     }
-   }else if(ranks.some(a=>a.n>=unit.width && (a.rank>unit.high ||
-       // For a multi-component throw, another equal singleton is not a
-       // guaranteed top card. Reject that ambiguous throw conservatively.
-       (unit.kind==='single'&&units.length>1&&a.rank===unit.high))))return false;
+   }else if(ranks.some(a=>a.n>=unit.width && a.rank>unit.high))return false;
+   // Equality is not a winning challenge: a same-rank K does not beat K.
+   // KQJ against an opposing Q still fails because Q beats the J component.
+   // AAQQ against an opposing KK still fails because KK beats QQ.
   }
  }
  return true;
@@ -2080,13 +2117,73 @@ E.finishBidding=function(g){if(g.phase!=='bid')return{ok:false,error:'Not in bid
  g.phase='bury';g.hands[g.dealerSeat].push(...g.kitty);g.hands.forEach(h=>E.sort(h,g));
  g.history.push({kind:'trump-final',suit:g.trump,level:g.level,declared:g.declared});return{ok:true,trump:g.trump};
 };
-E.chooseKitty=function(g,seat){const hand=g.hands[seat],n=g.settings.kitty;const groups={};for(let c of hand){const suit=E.group(c,g);groups[suit]=(groups[suit]||0)+1;}
- // Favor voiding a short side suit; avoid burying trumps, kings, tens and fives.
- const trumpStrength=(groups.T||0)/Math.max(1,hand.length);
- const sorted=[...hand].sort((a,b)=>{const v=c=>{let gr=E.group(c,g),m=E.counts(hand).get(E.key(c)).length;
- let p=E.points(c);return (gr==='T'?120:0) + (p===10?(trumpStrength>.38?12:25):p===5?(trumpStrength>.38?7:17):0)+(E.ordinal(c,g)*.48)+(m>=2?15:0)+(groups[gr]||0)*1.8+(gr==='T'&&c.r===g.level?40:0)};
- return v(a)-v(b)});
- return sorted.slice(0,n);
+E.chooseKitty=function(g,seat){
+ const hand=g.hands[seat],n=g.settings.kitty;
+ if(!hand||!Number.isInteger(n)||n<1||hand.length<n)return [];
+ const trump=hand.filter(c=>E.group(c,g)==='T');
+ const strong=trump.filter(c=>c.s==='J'||c.r===g.level||E.ordinal(c,g)>=10);
+ const secure=trump.length>=Math.max(9,Math.ceil(hand.length*.27))&&strong.length>=4;
+ const ptsRisk=secure?1.9:secure===false&&trump.length<=5?8.0:4.5;
+ const bySuit={};for(const c of hand){const k=E.group(c,g);bySuit[k]=(bySuit[k]||0)+1;}
+ const cache=new Map();
+ const value=buried=>{
+  const key=buried.map(c=>c.id).sort().join('|');if(cache.has(key))return cache.get(key);
+  const ids=new Set(buried.map(c=>c.id)),kept=hand.filter(c=>!ids.has(c.id));
+  const suitCounts={};for(const c of kept){const k=E.group(c,g);suitCounts[k]=(suitCounts[k]||0)+1;}
+  let score=0;
+  for(const c of buried){
+   const isTrump=E.group(c,g)==='T',power=E.ordinal(c,g);
+   // Points are not categorically forbidden in kitty, but they increase
+   // the loss if another team takes the last trick. A protected dealer can
+   // afford more flexibility in preserving a powerful hand pattern.
+   score-=E.points(c)*ptsRisk;
+   score-=isTrump?(c.s==='J'?180:95+power*4):power*.8;
+   if(c.s!=='J'&&c.r===14&&!isTrump)score-=43;
+  }
+  for(const s of E.SUITS){
+   const before=bySuit[s]||0,after=suitCounts[s]||0;
+   if(before>0){
+    if(after===0)score+=secure?114:91;
+    else if(after===1)score+=before<=4?28:12;
+    else if(after===2&&before<=5)score+=10;
+   }
+  }
+  // Reward keeping complete controlling groups and consecutive formations.
+  for(const group of [ 'T',...E.SUITS ]){
+   const cards=kept.filter(c=>E.group(c,g)===group);
+   for(const a of E.counts(cards).values()){
+    const w=a.length,rank=E.ordinal(a[0],g),high=Math.max(0,rank-8);
+    if(w>=2)score+=16+high*2.5;
+    if(w>=3)score+=24+high*2;
+    if(w>=4)score+=20;
+   }
+   score+=Math.max(0,E.maxRun(cards,g,2)-1)*21;
+   score+=Math.max(0,E.maxRun(cards,g,3)-1)*28;
+  }
+  cache.set(key,score);return score;
+ };
+ // Greedy selection followed by pair exchanges: optimizes *the kept hand*,
+ // not simply the rank of each individual card being buried.
+ let buried=[];
+ for(let k=0;k<n;k++){
+  let pick=null,best=-Infinity;
+  for(const c of hand){if(buried.includes(c))continue;
+   const trial=[...buried,c],s=value(trial);
+   if(s>best){pick=c;best=s;}
+  }
+  if(!pick)break;buried.push(pick);
+ }
+ for(let round=0;round<3;round++){
+  let improved=false,best=value(buried),replacement=null;
+  for(let i=0;i<buried.length;i++)for(const c of hand){
+   if(buried.includes(c))continue;
+   const trial=buried.slice();trial[i]=c;const s=value(trial);
+   if(s>best+0.001){best=s;replacement=trial;}
+  }
+  if(replacement){buried=replacement;improved=true;}
+  if(!improved)break;
+ }
+ return buried;
 };
 E.bury=function(g,seat,ids){if(g.phase!=='bury'||seat!==g.dealerSeat)return{ok:false,error:'Only dealer can bury cards'};
  const n=g.settings.kitty,hand=g.hands[seat],set=new Set(ids);if(ids.length!==n||set.size!==n||ids.some(id=>!hand.find(c=>c.id===id)))return{ok:false,error:`请选择 ${n} 张牌扣底 / Choose ${n} cards`};
@@ -2473,6 +2570,11 @@ function leadControlBonus(g,seat,move,p){
   bonus+=19+9*(p.length-2)+7*(p.width-2);
   if(group==='T'&&move.some(c=>c.s==='J'))bonus-=13;
  }
+ if(group!=='T'&&p.kind==='group'&&p.width===2&&move[0].r===14){
+  // AA is the strongest side-suit pair. Often lead it before consuming
+  // triples or tractors, especially once we know our partners.
+  bonus+=(g.trickNo<=8?53:24)+(allies.length?20:0);
+ }
  if(p.kind==='single'){
   const c=move[0],unseen=remainingHigher(g,seat,c);
   // K/10 are scoring cards, not harmless signals. Leading them before enemy
@@ -2482,15 +2584,20 @@ function leadControlBonus(g,seat,move,p){
    if(voidAllies)bonus+=12; // partner may ruff, but is never guaranteed to.
   }
   if(group!=='T'&&rank<9&&unseen>0){
-   bonus-=20;
-   if(!voidAllies)bonus-=13; // no confirmed teammate known able to ruff
+   bonus-=35;
+   if(!voidAllies)bonus-=26; // an unprotected weak single often hands points to the enemy
+  }
+  if(group!=='T'&&c.r===14&&unseen===0){
+   // Cash a certain outside Ace before exposing a vulnerable single. Once
+   // teams are known, partners can safely feed scoring cards to this winner.
+   bonus+=(g.trickNo<=8?36:17)+(allies.length?18:0);
   }
   // A small trump can be a controlled hand-off if the other side suits are
   // unreliable and a confirmed partner is still active. Never assume they
   // have a particular hidden big trump.
   if(group==='T'&&rank<=7&&allies.length&&!move.some(c=>E.points(c))){
     const ownReliableSide=g.hands[seat].some(c=>E.group(c,g)!=='T'&&c.r===14);
-    if(!ownReliableSide)bonus+=11;
+    if(!ownReliableSide)bonus+=24; // inexpensive hand-off to a teammate
   }
  }
  if(group!=='T'&&voidAllies){
@@ -2505,6 +2612,15 @@ function leadScore(g,seat,move){const p=E.pattern(move,g,g.settings.allowThrows)
  let score=22 + (p.kind==='run'?14+6*p.length:p.kind==='group'?7*p.width:0) + (E.ordinal(move[0],g)*.6) -other*(p.kind==='single'?2.7:1.2);
  score-=strengthCost(g,seat,move)*(p.kind==='single'?.48:p.kind==='group'?.12:.22);score-=points(move)*1.65;
  if(group==='T')score-=9;
+ // When the publicly visible cards and our hand account for virtually all
+ // trump, stop burning trump leads while useful side cards remain. Keep
+ // the remaining trumps to ruff partner-created void suits and defend kitty.
+ if(group==='T'&&g.hands[seat].some(c=>E.group(c,g)!=='T')&&g.hands[seat].filter(c=>E.group(c,g)==='T').length>=3){
+  const seen=playedVisibleIds(g),own=new Set(g.hands[seat].map(c=>c.id));
+  const unseenTrump=E.makeDeck(g.decks||g.settings.decks||2).filter(c=>E.group(c,g)==='T'&&!seen.has(c.id)&&!own.has(c.id)).length;
+  if(unseenTrump<=1)score-=76;
+  else if(unseenTrump<=4)score-=26;
+ }
  const groupCount=g.hands[seat].filter(c=>E.group(c,g)===group).length;
  if(groupCount===move.length&&group!=='T')score+=7;
  if(p.kind==='run'&&move.length>4)score-=5*(move.length-4);
@@ -2559,30 +2675,31 @@ function lastSeatThreat(g,seat,winningCards,lead){
  const pool=E.makeDeck(g.decks||g.settings.decks||2).filter(c=>!seen.has(c.id));
  if(!pool.length)return 0;
  const held=(g.hands[last]||[]).length;
- // Probability that an opponent with this many unknown cards holds a
- // single higher card (or a higher complete group when following a pair).
+ // An unknown void is not proof of a following suit. Estimate a genuine
+ // over-ruff possibility rather than assuming it is zero or certain.
+ const knownVoid=(g.voids[last]||[]).includes(lead.suit);
+ const suitLeft=pool.filter(c=>E.group(c,g)===lead.suit).length;
+ const unknownVoidChance=knownVoid?1:Math.max(.20,Math.min(.67,.60-suitLeft/(pool.length+1)));
  if(lead.n===1){
-   const higher=pool.filter(c=>E.canBeat([c],winningCards,lead,g)&&
-       (E.group(c,g)===lead.suit || (g.voids[last]||[]).includes(lead.suit)));
-   const p=Math.min(.99,1-Math.pow(1-higher.length/pool.length,Math.max(0,held)));
-   // A lower-bound threat for a very weak lead, to avoid trusting an
-   // opponent who has not yet acted even when few cards remain unplayed.
-   return p;
+  const higher=pool.filter(c=>E.canBeat([c],winningCards,lead,g));
+  const side=higher.filter(c=>E.group(c,g)===lead.suit).length;
+  const trump=higher.filter(c=>E.group(c,g)==='T'&&lead.suit!=='T').length;
+  const effective=side+trump*unknownVoidChance;
+  return Math.min(.99,1-Math.pow(1-effective/pool.length,Math.max(0,held)));
  }
  if(bestPattern.kind==='group'){
-   const w=bestPattern.width,groups=[...E.counts(pool).values()];let chanceNone=1;
-   for(const group of groups){if(group.length<w)continue;
-     const challenger=group.slice(0,w);
-     if(!E.canBeat(challenger,winningCards,lead,g))continue;
-     // Probability the same opponent holds all w copies, approximated with
-     // the exact hypergeometric draw for each group, combined conservatively.
-     let p=1;for(let k=0;k<w;k++)p*=Math.max(0,held-k)/Math.max(1,pool.length-k);
-     const subsets=w===2?group.length*(group.length-1)/2:1;
-     chanceNone*=Math.max(.01,1-Math.min(.92,p*subsets));
-   }
-   return Math.min(.94,1-chanceNone);
+  const w=bestPattern.width,groups=[...E.counts(pool).values()];let chanceNone=1;
+  for(const group of groups){if(group.length<w)continue;
+   const challenger=group.slice(0,w);
+   if(!E.canBeat(challenger,winningCards,lead,g))continue;
+   let prob=1;for(let k=0;k<w;k++)prob*=Math.max(0,held-k)/Math.max(1,pool.length-k);
+   if(lead.suit!=='T'&&E.group(challenger[0],g)==='T')prob*=unknownVoidChance;
+   const subsets=w===2?group.length*(group.length-1)/2:1;
+   chanceNone*=Math.max(.01,1-Math.min(.92,prob*subsets));
+  }
+  return Math.min(.94,1-chanceNone);
  }
- return .45; // less common mixed structures: do not assume perfect safety
+ return .45;
 }
 function followScore(g,seat,move){const lead=g.plays[0].pattern,best=E.winningPlay(g),partnerWinning=E.team(best.seat)===E.team(seat),canWin=E.canBeat(move,best.cards,lead,g);
  const trickPoints=g.plays.reduce((s,p)=>s+points(p.cards),0)+points(move);
@@ -2695,7 +2812,10 @@ function followScore(g,seat,move){const lead=g.plays[0].pattern,best=E.winningPl
  if(g.plays.length===2&&E.team((seat+1)%4)!==E.team(seat)&&
      !partnerWinning&&canWin){
    const danger=lastSeatThreat(g,seat,move,lead);
-   score+=(1-danger)*(54+trickPoints*2.4 + 12*Math.max(0,scoreUrgency(g,seat)));
+   // High-value tricks warrant a stronger winner, even if that spends an
+   // extra trump. A modest K can be over-ruffed by the unseen last player.
+   score+=(1-danger)*(68+trickPoints*4.7 + 20*Math.max(0,scoreUrgency(g,seat)));
+   score-=danger*(24+trickPoints*2.2);
    // Prefer a sufficient ordinary trump over spending a level trump or Joker
    // merely to guard against an uncertain final-seat overtake.
    if(lead.n===1&&move.some(c=>c.r===g.level||c.s==='J')){
@@ -2931,7 +3051,7 @@ B.choose=function(g,seat,{quick=false}={}){
  // team control and how many points it exposes in sampled public-information
  // worlds. A sampled hand is a hypothesis, never the real hidden hand.
  if(g.settings.difficulty!=='basic'&&g.plays.length<3){
-  const estimates=B.evaluateTrickRisk(g,seat,top.map(t=>t.move),{samples:quick?2:5});
+  const estimates=B.evaluateTrickRisk(g,seat,top.map(t=>t.move),{samples:quick?3:7});
   for(let i=0;i<top.length;i++){
    const r=estimates[i];if(!r.samples)continue;
    const inControl=r.control;
@@ -3021,10 +3141,10 @@ F.finishBids=function(g){if(g.phase!=='bid')return{ok:false,error:'不在叫主�
  if(!g.declared)return{ok:false,error:'无法形成合法叫主，请重新发牌'};
  g.phase='bury';g.hands[g.dealerSeat].push(...g.kitty);E.sort(g.hands[g.dealerSeat],g);return{ok:true};
 };
-F.chooseBury=function(g){const tmp={...g,dealerSeat:g.dealerSeat,settings:g.settings};
- const cards=[...g.hands[g.dealerSeat]].sort((a,b)=>{
- const cost=c=>(E.group(c,g)==='T'?120:0)+E.points(c)*(g.hands[g.dealerSeat].filter(x=>E.group(x,g)==='T').length>g.hands[g.dealerSeat].length*.38?1.1:3.0)+E.power(c,g)*.25+(E.counts(g.hands[g.dealerSeat]).get(E.key(c))?.length>=2?14:0);
- return cost(a)-cost(b)});return cards.slice(0,g.settings.kitty);
+F.chooseBury=function(g){
+ // Same optimized kitty evaluator as Tractor: avoid point-card taboos, seek
+ // side-suit voids, and preserve pairs/triples while assessing trump defense.
+ return E.chooseKitty(g,g.dealerSeat);
 };
 F.bury=function(g,seat,ids){if(g.phase!=='bury'||seat!==g.dealerSeat)return{ok:false,error:'只有庄家可扣底'};
  const hand=g.hands[seat],set=new Set(ids);
@@ -3169,6 +3289,11 @@ F.botMove=function(g,seat){
  const isDealer=seat===g.dealerSeat;
  const secretAlly=!isDealer&&callsA.some(c=>{const seen=g.seenCalls[E.key({s:c.s,r:14})]||0;return c.n===g.decks&&seen===g.decks-1&&hand.some(x=>x.s===c.s&&x.r===14);});
  const hasCalledAce=callsA.filter(c=>hand.some(x=>x.s===c.s&&x.r===14));
+ // Prepare a single public-information snapshot per decision. Looking up the
+ // entire trick history for each possible low-card lead used to stall iPads.
+ const seenIds=new Set((g.history||[]).filter(h=>h.kind==='play').flatMap(h=>h.cards||[]));
+ const ownIds=new Set(hand.map(c=>c.id));
+ const unknownCards=E.makeDeck(g.decks).filter(c=>!seenIds.has(c.id)&&!ownIds.has(c.id));
  // A partner holding a called Ace can infer the possible signal, but cannot
  // know who else holds a hidden copy or that they will be the first to play it.
  const callKSignal=(cards)=>{
@@ -3240,7 +3365,18 @@ F.botMove=function(g,seat){
     // and tractors can be dominant formations, not just low-ranked cards.
     score+=B.controlBonus(g,seat,cards,p);
     if(p.kind==='group'&&p.width>=3)score+=28; // prefer decisive trips before exposing lone high cards
-    if(p.kind==='run')score+=16; // consecutive pairs take and retain tempo
+    if(p.kind==='run')score+=16; // consecutive pairs and triples retain tempo
+    if(p.suit!=='T'&&cards[0].r===14){
+     const reliable=cards.length===1||(p.kind==='group'&&p.width===2);
+     if(reliable&&!revealingAlly)score+=(p.width===2?46:31)+(ownAlly?18:0);
+    }
+    // Discourage weak singleton leads that donate control, unless a known
+    // friend is void in this suit and can ruff.
+    if(p.kind==='single'&&p.suit!=='T'&&cards[0].r<12){
+     const knownVoid=(g.allies||[]).some(i=>i!==seat&&(g.voids[i]||[]).includes(p.suit));
+     const remainingHigher=unknownCards.some(c=>E.group(c,g)===p.suit&&E.ordinal(c,g)>p.high);
+     if(remainingHigher&&!knownVoid)score-=36;
+    }
     if(p.kind==='throw'&&E.checkThrowSafe(cards,g,seat))score+=27+6*cards.length; // use verified multi-component top-card throws
     score+=Math.min(7,hand.length/5)*(p?.kind==='group'?3:p?.kind==='run'?8:0);
     if(cards.length===1&&E.group(cards[0],g)==='T')score-=12;
@@ -3300,7 +3436,7 @@ F.botMove=function(g,seat){
   const revealing=top.map(entry=>F.callsRevealedByPlay(g,seat,entry.cards).length>0);
   // Any action revealing the player as a known dealer ally must be evaluated
   // with that new public status. The sampled physical cards do not change.
-  const ordinary=B.evaluateTrickRisk(g,seat,top.map(x=>x.cards),{samples:g.players>=8?3:5});
+  const ordinary=B.evaluateTrickRisk(g,seat,top.map(x=>x.cards),{samples:g.players>=8?3:g.players>=6?5:7});
   const newlyFriendly=revealing.some(Boolean)?B.evaluateTrickRisk(g,seat,top.map(x=>x.cards),
    {samples:g.players>=8?3:5,allies:[...new Set([...(g.allies||[]),seat])]}):ordinary;
   for(let j=0;j<top.length;j++){
@@ -3308,8 +3444,11 @@ F.botMove=function(g,seat){
    if(!estimate.samples)continue;
    const remaining=g.players-1-g.plays.length;
    const riskFactor=!lead?1.25:remaining>=2?1.05:.65;
-   top[j].score+=(estimate.control-.5)*(lead?45:76)
-      -estimate.enemyPoints*riskFactor;
+   // Before the last reply, favor plays expected to survive an overruff,
+   // particularly if a teammate has already contributed scoring cards.
+   const exposed=(g.plays||[]).flatMap(x=>x.cards).reduce((v,c)=>v+E.points(c),0);
+   top[j].score+=(estimate.control-.5)*(lead?55+Math.min(65,exposed*2):76)
+      -estimate.enemyPoints*(riskFactor+(lead&&remaining>0?.45:0));
    const shape=E.pattern(top[j].cards,g,true);
    if(!lead&&shape?.kind==='group'&&shape.width>=3)top[j].score+=estimate.control*19;
    if(!lead&&shape?.kind==='run')top[j].score+=estimate.control*24;
@@ -3408,6 +3547,7 @@ function persistSettings(){settings.gameMode=activeMode;profiles[activeMode]=set
 let G=restoreGame(activeMode),match=load('HHgames.tractor.match.v1',load('HHgames.match.v4',{levels:[2,2],dealerSeat:0,handNo:0})),view='hub',selected=new Set(),lastRoundActive=false,reviewTrickNo=null,timer=null,messageText='',messageType='',toastTimer=null,feedbackCaptured=null,trickAnim=null,kittyPulseUntil=0,collectDelayTimer=null,collectCleanupTimer=null,collectLayer=null;
 const SUDOKU_LEVELS={easy:{key:'easy',zh:'简单',en:'Easy',blanks:40},medium:{key:'medium',zh:'中等',en:'Medium',blanks:48},hard:{key:'hard',zh:'困难',en:'Hard',blanks:54},expert:{key:'expert',zh:'极难',en:'Extreme',blanks:58}};
 let sudoku=load('HHgames.sudoku.current.v1',null),sudokuRecords=load('HHgames.sudoku.records.v1',[]),sudokuTimer=null;
+let sudokuSwapped=load('HHgames.sudoku.swapped.v1',false);
 function tr(zh,en){return settings.language==='en'?en:zh}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){/* Some file:// Safari configurations block storage */}}
 function load(k,otherwise){try{let s=localStorage.getItem(k);return s?JSON.parse(s):E.clone(otherwise)}catch(e){return E.clone(otherwise)}}
@@ -4212,7 +4352,7 @@ function renderSudokuBoard(){if(!sudoku)return;
   return `<button type="button" class="${cls}" data-sudoku-cell="${ix}" aria-label="R${Math.floor(ix/9)+1}C${ix%9+1}${n?` ${n}`:''}">${n?`<span class="main-digit">${n}</span>`:noteHtml}</button>`;
  }).join('');
 }
-function renderSudoku(){adjustButtons();$('sudokuTitle').innerHTML=tr('Sudoku <small>（单机）</small>','Sudoku <small>(Offline)</small>');$('sudokuIntro').textContent=tr('左右数字键快速输入','Fast two-sided input');$('sudokuFixedLabel').textContent=tr('确定','Fixed');$('sudokuNoteLabel').textContent=tr('待定 · 数字角标=已确认个数','Notes · Count fixed');$('sudokuRecordsBtn').textContent=tr('历史','History');$('sudokuBackBtn').textContent=tr('← 难度','← Levels');$('sudokuEraseBtn').textContent=tr('擦除','Erase');$('sudokuUndoBtn').textContent=tr('撤销','Undo');$('sudokuRestartBtn').textContent=tr('重开','Restart');$('sudokuFreshBtn').textContent=tr('新题','New');$('sudokuValidateBtn').textContent=tr('验证','Validate');$('sudokuHintBtn').textContent=tr('提示','Hint');$('sudokuAnalyzeBtn').textContent=tr('分析','Analyze');$('sudokuBackBtn').classList.toggle('hidden',!sudoku);$('sudokuLobby').classList.toggle('hidden',!!sudoku);$('sudokuGame').classList.toggle('hidden',!sudoku);renderSudokuLobby();if(!sudoku){stopSudokuTicker();return}renderSudokuStatsOnly();renderSudokuKeys();renderSudokuBoard();$('sudokuHintText').textContent=sudoku.hintMessage||tr('选择棋盘上的数字：红色 = 所有相同的确定值及待定候选；黄色 = 同行、同列和九宫格。','Select a filled cell: red = matching fixed values and pencil notes, yellow = row, column and box.');stopSudokuTicker();if(!sudoku.completed)sudokuTimer=setInterval(()=>{if(view!=='sudoku'||!sudoku||sudoku.completed){stopSudokuTicker();return;}renderSudokuStatsOnly()},1000)}
+function renderSudoku(){adjustButtons();$('sudokuShell').classList.toggle('sudoku-swapped',!!sudokuSwapped);$('sudokuTitle').innerHTML=tr('Sudoku <small>（单机）</small>','Sudoku <small>(Offline)</small>');$('sudokuIntro').textContent=tr('左右数字键快速输入','Fast two-sided input');$('sudokuFixedLabel').textContent=tr('确定','Fixed');$('sudokuNoteLabel').textContent=tr('待定 · 数字角标=已确认个数','Notes · Count fixed');$('sudokuRecordsBtn').textContent=tr('历史','History');$('sudokuBackBtn').textContent=tr('← 难度','← Levels');$('sudokuEraseBtn').textContent=tr('擦除','Erase');$('sudokuUndoBtn').textContent=tr('撤销','Undo');$('sudokuRestartBtn').textContent=tr('重开','Restart');$('sudokuFreshBtn').textContent=tr('新题','New');$('sudokuSwapBtn').textContent=tr('交换','Swap');$('sudokuSwapBtn').setAttribute('aria-pressed',String(!!sudokuSwapped));$('sudokuValidateBtn').textContent=tr('验证','Validate');$('sudokuHintBtn').textContent=tr('提示','Hint');$('sudokuAnalyzeBtn').textContent=tr('分析','Analyze');$('sudokuBackBtn').classList.toggle('hidden',!sudoku);$('sudokuLobby').classList.toggle('hidden',!!sudoku);$('sudokuGame').classList.toggle('hidden',!sudoku);renderSudokuLobby();if(!sudoku){stopSudokuTicker();return}renderSudokuStatsOnly();renderSudokuKeys();renderSudokuBoard();$('sudokuHintText').textContent=sudoku.hintMessage||tr('选择棋盘上的数字：红色 = 所有相同的确定值及待定候选；黄色 = 同行、同列和九宫格。','Select a filled cell: red = matching fixed values and pencil notes, yellow = row, column and box.');stopSudokuTicker();if(!sudoku.completed)sudokuTimer=setInterval(()=>{if(view!=='sudoku'||!sudoku||sudoku.completed){stopSudokuTicker();return;}renderSudokuStatsOnly()},1000)}
 function sudokuSelect(ix,noteDigit=0){if(!sudoku)return;sudoku.selected=ix;sudoku.highlightDigit=noteDigit||sudoku.values[ix]||0;sudoku.invalidCells=[];sudoku.hintCells=[];sudoku.hintMessage='';saveSudoku();renderSudoku()}
 function sudokuPushHistory(){if(!sudoku)return;sudoku.history.push({values:sudoku.values.slice(),notes:sudoku.notes.map(x=>x.slice()),selected:sudoku.selected});if(sudoku.history.length>120)sudoku.history.shift()}
 function sudokuInput(n,asNote=false){if(!sudoku||sudoku.completed||sudokuCountFilled(n)>=9)return;const ix=sudoku.selected;if(ix==null||ix<0||sudoku.puzzle[ix])return;sudokuPushHistory();if(asNote){if(sudoku.values[ix])sudoku.values[ix]=0;const set=new Set(sudoku.notes[ix]||[]);set.has(n)?set.delete(n):set.add(n);sudoku.notes[ix]=[...set].sort((a,b)=>a-b)}else{sudoku.values[ix]=n;sudoku.notes[ix]=[];for(const j of sudokuPeerSet(ix))if(j!==ix)sudoku.notes[j]=(sudoku.notes[j]||[]).filter(x=>x!==n)}sudoku.highlightDigit=n;sudoku.invalidCells=[];sudoku.hintCells=[];sudoku.hintMessage='';saveSudoku();sudokuCheckDone();renderSudoku()}
@@ -4227,7 +4367,16 @@ function sudokuNextHint(){if(!sudoku)return null;const values=sudoku.values;if(v
  for(const group of sudokuUnits())for(let n=1;n<=9;n++){if(group.ids.some(ix=>values[ix]===n))continue;const fits=group.ids.filter(ix=>!values[ix]&&sudokuCandidates(values,ix).includes(n));if(fits.length===1){const ix=fits[0];return{focus:ix,cells:[ix],kind:'hidden',n,group:group.name,text:tr(`${group.name} 的 ${n} 只能放在 ${label(ix)}。`,`In ${group.name}, ${n} can only go in ${label(ix)}.`)}}}
  options.sort((a,b)=>a.cands.length-b.cands.length);const x=options.find(o=>o.cands.length>0);if(!x)return{focus:blanks[0],cells:[blanks[0]],kind:'conflict',text:tr('当前出现无合法候选的空格，建议先点“验证”。','At least one empty cell has no candidates. Try Validate first.')};const br=Math.floor(Math.floor(x.ix/9)/3)*3,bc=Math.floor((x.ix%9)/3)*3;const cells=options.filter(o=>Math.floor(Math.floor(o.ix/9)/3)*3===br&&Math.floor((o.ix%9)/3)*3===bc).slice(0,3).map(o=>o.ix);return{focus:x.ix,cells,kind:'candidates',cands:x.cands,text:tr(`建议先研究 ${label(x.ix)} 所在的 3×3 宫，重点检查 ${x.cands.join('、')} 的可能性。`,`Inspect the 3×3 box containing ${label(x.ix)}, focusing on candidates ${x.cands.join(', ')}.`)}}
 function sudokuHelp(deeper){if(!sudoku||sudoku.completed)return;sudoku.assistanceUsed=true;const h=sudokuNextHint();if(!h)return;const ix=h.focus,r=Math.floor(ix/9),c=ix%9,peer=sudokuPeerSet(ix),values=sudoku.values;const row=[...Array(9)].map((_,j)=>values[r*9+j]).filter(Boolean),col=[...Array(9)].map((_,j)=>values[j*9+c]).filter(Boolean),box=[...peer].filter(j=>Math.floor(j/9)!==r&&j%9!==c).map(j=>values[j]).filter(Boolean);sudoku.hintCells=h.cells;sudoku.selected=ix;sudoku.invalidCells=[];sudoku.hintMessage=h.text;if(deeper){const cands=sudokuCandidates(values,ix);sudoku.hintMessage+=' '+(tr(`分析：本行已有 ${[...new Set(row)].sort().join(',')||'—'}；本列已有 ${[...new Set(col)].sort().join(',')||'—'}；同宫格已用 ${[...new Set(box)].sort().join(',')||'—'}。因此该格的候选为 ${cands.join(',')||'无'}。`,`Analysis: row contains ${[...new Set(row)].sort().join(',')||'none'}; column has ${[...new Set(col)].sort().join(',')||'none'}; 3×3 box has ${[...new Set(box)].sort().join(',')||'none'}. Remaining candidates: ${cands.join(',')||'none'}.`))}saveSudoku();renderSudoku()}
-function showSudokuLeaderboard(){const tabs=Object.keys(SUDOKU_LEVELS).map(level=>`<button class="ui-btn small ghost" data-sudoku-rank="${level}">${escape(sudokuName(level))}</button>`).join('');modal(tr('Sudoku 最快记录','Sudoku Best Times'),`<div class="setting-seg">${tabs}</div><div id="sudokuModalRows"></div>`);const update=level=>{const rows=sudokuRecords.filter(r=>r.difficulty===level).sort((a,b)=>a.seconds-b.seconds).slice(0,20);$('sudokuModalRows').innerHTML=`<h3>${escape(sudokuName(level))} · Top 20</h3>`+(rows.length?rows.map((r,i)=>`<div class="sudoku-record-row"><b>#${i+1}</b><span>${escape(sudokuName(r.difficulty))}</span><strong>${sudokuFmt(r.seconds)}</strong><span>${sudokuDate(r.date)}</span></div>`).join(''):`<p>${tr('暂无成绩','No recorded times yet')}</p>`);document.querySelectorAll('[data-sudoku-rank]').forEach(x=>x.classList.toggle('primary',x.dataset.sudokuRank===level))};document.querySelectorAll('[data-sudoku-rank]').forEach(x=>x.onclick=()=>update(x.dataset.sudokuRank));update(sudoku?.difficulty||'easy')}
+function showSudokuLeaderboard(){
+ const tabs=`<button class="ui-btn small ghost" data-sudoku-rank="all">${tr('全部难度','All levels')}</button>`+Object.keys(SUDOKU_LEVELS).map(level=>`<button class="ui-btn small ghost" data-sudoku-rank="${level}">${escape(sudokuName(level))}</button>`).join('');
+ modal(tr('Sudoku 历史记录','Sudoku History'),`<div class="setting-seg">${tabs}</div><div id="sudokuModalRows" class="sudoku-modal-history"></div>`);
+ const update=level=>{
+  const all=level==='all';const rows=all?[...sudokuRecords].sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))):sudokuRecords.filter(r=>r.difficulty===level).sort((a,b)=>a.seconds-b.seconds).slice(0,20);
+  $('sudokuModalRows').innerHTML=`<h3>${all?tr('全部难度 · 按完成日期排列','All levels · Most recent first'):escape(sudokuName(level))+' · Top 20'} (${rows.length})</h3>`+(rows.length?rows.map((r,i)=>`<div class="sudoku-record-row"><b>#${i+1}</b><span>${escape(sudokuName(r.difficulty))}</span><strong>${sudokuFmt(r.seconds)}</strong><span>${sudokuDate(r.date)}</span></div>`).join(''):`<p>${tr('暂无成绩','No recorded times yet')}</p>`);
+  document.querySelectorAll('[data-sudoku-rank]').forEach(x=>x.classList.toggle('primary',x.dataset.sudokuRank===level));
+ };
+ document.querySelectorAll('[data-sudoku-rank]').forEach(x=>x.onclick=()=>update(x.dataset.sudokuRank));update('all');
+}
 function openSudokuSettings(){modal(tr('Sudoku 设置','Sudoku Settings'),`${segment(tr('语言','Language'),'language',[['zh','中文'],['en','English']],settings.language)}<p>${tr('左侧输入确定数字；右侧是待定笔记键盘。右侧数字角标表示该数字在棋盘上已被确认的格子数。','Left keypad places fixed digits; right keypad toggles notes. The corner count on the right is the number of confirmed instances of that digit.')}</p><div class="form-actions"><button class="ui-btn primary" id="sdSettingsSave">${tr('保存','Save')}</button></div>`);document.querySelectorAll('[data-setting] .set-choice').forEach(el=>el.onclick=()=>{el.parentElement.querySelectorAll('.set-choice').forEach(x=>x.classList.remove('active'));el.classList.add('active')});$('sdSettingsSave').onclick=()=>{settings.language=chosen('language');persistSettings();closeModal();renderSudoku()}}
 function openSudokuFeedback(){if(!sudoku){toast(tr('请选择难度后再报告','Select a difficulty first'));return}pauseSudoku();const snap=()=>JSON.stringify({schema:'HHgames-sudoku-feedback-v2',version:E.VERSION,at:new Date().toISOString(),comment:$('sdFeedbackComment')?.value||'',puzzle:sudoku.puzzle,values:sudoku.values,notes:sudoku.notes,difficulty:sudoku.difficulty,elapsed:sudokuElapsed(),assistanceUsed:sudoku.assistanceUsed,hintCells:sudoku.hintCells,invalidCells:sudoku.invalidCells},null,2);modal(tr('Sudoku 反馈','Sudoku Feedback'),`<p>${tr('下载或复制当前完整棋盘。不会自动上传。','Export the current board; nothing is uploaded automatically.')}</p><textarea id="sdFeedbackComment" rows="3" placeholder="${tr('问题描述（可选）','Optional comment')}"></textarea><div class="form-actions"><button class="ui-btn primary" id="sdFeedbackDownload">${tr('下载 JSON','Download JSON')}</button><button class="ui-btn ghost" id="sdFeedbackCopy">${tr('复制','Copy')}</button></div>`);$('sdFeedbackDownload').onclick=()=>{const blob=new Blob([snap()],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='HHgames-sudoku-feedback.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500)};$('sdFeedbackCopy').onclick=async()=>{const ok=await copyText(snap());toast(ok?tr('已复制','Copied'):tr('复制失败','Copy failed'))}}
 function sudokuHandleKey(e){if(view!=='sudoku'||!$('dialogBackdrop').classList.contains('hidden'))return false;if(/^[1-9]$/.test(e.key)){sudokuInput(+e.key,e.shiftKey);return true}if(e.key==='Backspace'||e.key==='Delete'){sudokuErase();return true}if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)&&sudoku){let ix=sudoku.selected>=0?sudoku.selected:0,r=Math.floor(ix/9),c=ix%9;if(e.key==='ArrowUp')r=(r+8)%9;if(e.key==='ArrowDown')r=(r+1)%9;if(e.key==='ArrowLeft')c=(c+8)%9;if(e.key==='ArrowRight')c=(c+1)%9;sudoku.selected=r*9+c;saveSudoku();renderSudoku();return true}return false}
@@ -4358,6 +4507,7 @@ function setup(){ bootstrapSudoku();$('felt').appendChild($('phasePanel')); $('f
  if($('sudokuUndoBtn'))$('sudokuUndoBtn').onclick=sudokuUndo;
  if($('sudokuRestartBtn'))$('sudokuRestartBtn').onclick=sudokuRestart;
  if($('sudokuFreshBtn'))$('sudokuFreshBtn').onclick=()=>{if(sudoku&&confirm(tr('放弃此题，开始新题？','Start a new puzzle and discard this one?')))beginSudoku(sudoku.difficulty)};
+ $('sudokuSwapBtn').onclick=()=>{sudokuSwapped=!sudokuSwapped;save('HHgames.sudoku.swapped.v1',sudokuSwapped);renderSudoku()};
  $('dialogBackdrop').onclick=e=>{if(e.target===$('dialogBackdrop'))closeModal()};document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();if(sudokuHandleKey(e)){e.preventDefault();return;}if(e.key==='Enter'&&view==='game'&&G?.phase==='play'&&$('dialogBackdrop').classList.contains('hidden'))userPlay()});
  document.addEventListener('click',e=>{const rename=e.target.closest('[data-rename]');if(rename){renamePlayer(+rename.dataset.rename);return;}const pack=e.target.closest('[data-pack]');if(pack){handlePackClick(pack.dataset.pack);return;}const card=e.target.closest('[data-card]');if(card){pickCard(card.dataset.card);return}const bid=e.target.closest('[data-bid]');if(bid){const v=window.__hhBids?.[Number(bid.dataset.bid)];if(v)doBid(v.ids);return}const sort=e.target.closest('[data-sort]');if(sort){handSort=sort.dataset.sort;try{localStorage.setItem('HHgames.handSort.v3',handSort)}catch(err){}renderHand();return}const sdStart=e.target.closest('[data-sudoku-start]');if(sdStart){sudokuChooseLevel(sdStart.dataset.sudokuStart);return}const sdHistory=e.target.closest('[data-sudoku-history]');if(sdHistory){showSudokuLeaderboard();return}const sdErase=e.target.closest('[data-sudoku-erase]');if(sdErase){sudokuErase();return}const sdNoteDigit=e.target.closest('[data-sudoku-note-digit]');if(sdNoteDigit){const cell=sdNoteDigit.closest('[data-sudoku-cell]');if(cell){sudokuSelect(+cell.dataset.sudokuCell,+sdNoteDigit.dataset.sudokuNoteDigit);return}}const sdCell=e.target.closest('[data-sudoku-cell]');if(sdCell){sudokuSelect(+sdCell.dataset.sudokuCell);return}const sdIn=e.target.closest('[data-sudoku-input]');if(sdIn){sudokuInput(+sdIn.dataset.sudokuInput,false);return}const sdNote=e.target.closest('[data-sudoku-note]');if(sdNote){sudokuInput(+sdNote.dataset.sudokuNote,true);return}const action=e.target.closest('[data-action]');if(action)handleAction(action.dataset.action)});
  window.addEventListener('resize',()=>{adjustButtons();if(view==='game'){renderHand();if(friendsOn()||totalSeats()>4){positionFriendSeats();fitMultiPlayedCards();if(friendsOn())fitFriendsStatus();}}if(view==='sudoku')renderSudoku()});bindPackGestures();adjustButtons();renderHub();showHub();}
@@ -4369,11 +4519,11 @@ setup();
 })();
 
 </script><script>
-/* HHgames v1.24.0 GitHub Pages offline installer.
+/* HHgames v1.24.1 GitHub Pages offline installer.
    The five-file manifest MUST match the mini sw.js install cache, exactly. */
 (()=>{'use strict';
-const VERSION='1.24.0';
-const CACHE_NAME='hhgames-mini-v1.24.0';
+const VERSION='1.24.1';
+const CACHE_NAME='hhgames-mini-v1.24.1';
 const FILES=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 const panel=document.getElementById('offlineInstallPanel');
 const button=document.getElementById('offlinePrepareBtn');
