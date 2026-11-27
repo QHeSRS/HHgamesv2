@@ -1,5 +1,5 @@
 /* HHgames release: update VERSION and manifest hhgames_version together. */
-const VERSION='1.29.0';
+const VERSION='1.30.0';
 const SCOPE=new URL(self.registration.scope);
 const PREFIX='hhgames-release-'+encodeURIComponent(SCOPE.pathname)+'-';
 const CACHE=PREFIX+VERSION;
